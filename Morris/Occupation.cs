@@ -12,7 +12,10 @@ namespace Morris
 	public enum Occupation
 	{
 		Free,
-		White,
-		Black
+		// Die folgende Gleichsetzung spart einige Verzweigungen,
+		// indem ein Wert von Occupation direkt mit einem Wert
+		// von Player verglichen werden kann
+		White = Player.White,
+		Black = Player.Black
 	}
 }

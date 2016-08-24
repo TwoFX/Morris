@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GameResult.cs" />
     <Compile Include="GameState.cs" />
     <None Include="LICENSE" />
@@ -50,6 +51,7 @@
     <Compile Include="IMoveProvider.cs" />
     <Compile Include="GameMove.cs" />
     <Compile Include="MoveResult.cs" />
+    <Compile Include="MoveValidity.cs" />
     <Compile Include="Occupation.cs" />
     <Compile Include="Phase.cs" />
     <Compile Include="Player.cs" />
