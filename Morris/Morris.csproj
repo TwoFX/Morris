@@ -50,6 +50,7 @@
     <Compile Include="IGameStateObserver.cs" />
     <Compile Include="IMoveProvider.cs" />
     <Compile Include="GameMove.cs" />
+    <Compile Include="IReadOnlyGameState.cs" />
     <Compile Include="MoveResult.cs" />
     <Compile Include="MoveValidity.cs" />
     <Compile Include="Occupation.cs" />

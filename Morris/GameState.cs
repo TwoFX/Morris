@@ -20,9 +20,18 @@ namespace Morris
 		public Occupation[] Board { get; private set; }
 		public Player NextToMove { get; private set; }
 		public GameResult Result { get; private set; }
-		public bool IsGameRunning { get; private set; }
 
 		private Dictionary<Player, Phase> playerPhase;
+
+		/// <summary>
+		/// Gibt die Phase, in der sich ein Spieler befindet, zurück
+		/// </summary>
+		/// <param name="player">Der Spieler, dessen Phase gesucht ist</param>
+		/// <returns>Eine Phase</returns>
+		public Phase GetPhase(Player player)
+		{
+			return playerPhase[player];
+		}
 
 		private const int FIELD_SIZE = 24;
 
@@ -123,7 +132,7 @@ namespace Morris
 				return MoveValidity.Invalid; // Darf keinen Stein mehr platzieren
 
 			// 3.: Wurde eine Mühle geschlossen?
-			bool millClosed = mills.Any(mill => mill.All(point => (int)Board[point] == (int)NextToMove || point == move.To));
+			bool millClosed = mills.Any(mill => mill.Contains(move.To) && mill.All(point => (int)Board[point] == (int)NextToMove || point == move.To));
 
 			// 4.: Verifikation des Mühlenparameters
 			if (millClosed)
@@ -166,7 +175,7 @@ namespace Morris
 		/// </returns>
 		public MoveResult TryApplyMove(GameMove move)
 		{
-			if (!IsGameRunning)
+			if (Result != GameResult.Running)
 				return MoveResult.GameNotRunning;
 
 			if (IsValidMove(move) != MoveValidity.Valid)
