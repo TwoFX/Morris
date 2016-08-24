@@ -43,6 +43,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameResult.cs" />
+    <Compile Include="GameState.cs" />
+    <None Include="LICENSE" />
+    <Compile Include="IGameStateObserver.cs" />
+    <Compile Include="IMoveProvider.cs" />
+    <Compile Include="GameMove.cs" />
+    <Compile Include="MoveResult.cs" />
+    <Compile Include="Occupation.cs" />
+    <Compile Include="Phase.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
