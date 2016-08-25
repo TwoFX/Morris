@@ -31,7 +31,7 @@ namespace Morris
 		public const int FLYING_MAX = 3;
 
 		// Jeder Eintrag repräsentiert eine mögliche Mühle
-		private static readonly int[][] mills = new[]
+		public static readonly ReadOnlyCollection<ReadOnlyCollection<int>> Mills = Array.AsReadOnly(new[]
 		{
 			// Horizontal
 			new[] { 0, 1, 2 },
@@ -52,7 +52,7 @@ namespace Morris
 			new[] { 8, 12, 17 },
 			new[] { 5, 12, 20 },
 			new[] { 2, 14, 23 }
-		};
+		}.Select(mill => Array.AsReadOnly(mill)).ToArray());
 
 		// Gibt an, ob zwei Felder verbunden sind.
 		// Wird aus den Daten in mills im statischen Konstruktor generiert
@@ -61,14 +61,23 @@ namespace Morris
 		static GameState()
 		{
 			connections = new bool[FIELD_SIZE, FIELD_SIZE];
-			foreach (int[] mill in mills)
+			foreach (var mill in Mills)
 			{
-				for (int i = 0; i < mill.Length - 1; i++)
+				for (int i = 0; i < mill.Count - 1; i++)
 				{
 					connections[mill[i], mill[i + 1]] = true;
 					connections[mill[i + 1], mill[i]] = true;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Gibt alle Felder zurück, die mit einem Feld verbunden sind
+		/// </summary>
+		/// <param name="ID">Das zu untersuchende Feld</param>
+		public static IEnumerable<int> GetConnected(int ID)
+		{
+			return Enumerable.Range(0, FIELD_SIZE).Where(id => connections[ID, id]);
 		}
 
 		public GameState()
@@ -233,7 +242,7 @@ namespace Morris
 				return MoveValidity.Invalid; // Darf keinen Stein mehr platzieren
 
 			// 3.: Wurde eine Mühle geschlossen?
-			bool millClosed = mills.Any(mill => mill.Contains(move.To) && mill.All(point => (int)Board[point] == (int)NextToMove || point == move.To));
+			bool millClosed = Mills.Any(mill => mill.Contains(move.To) && mill.All(point => (int)Board[point] == (int)NextToMove || point == move.To));
 
 			// 4.: Verifikation des Mühlenparameters
 			if (millClosed)
@@ -254,9 +263,9 @@ namespace Morris
 				// Felder durch gegnerische Steine besetzt sind (die Mühle also geschlossen ist)"
 				bool allInMill = Enumerable.Range(0, FIELD_SIZE)
 					.Where(point => (int)Board[point] != (int)NextToMove.Opponent())
-					.All(point => mills.Any(mill => mill.Contains(point) && mill.All(mp => (int)Board[point] == (int)NextToMove.Opponent())));
+					.All(point => Mills.Any(mill => mill.Contains(point) && mill.All(mp => (int)Board[point] == (int)NextToMove.Opponent())));
 
-				if (!allInMill && mills.Any(mill => mill.Contains(move.Remove.Value) && mill.All(point => (int)Board[point] == (int)NextToMove.Opponent())))
+				if (!allInMill && Mills.Any(mill => mill.Contains(move.Remove.Value) && mill.All(point => (int)Board[point] == (int)NextToMove.Opponent())))
 					return MoveValidity.Invalid; // Versuch, einen Stein aus einer Mühle zu entfernen, obwohl Steine frei sind
 			}
 			else if (move.Remove.HasValue)

@@ -10,6 +10,10 @@ namespace Morris
 	{
 		static void Main(string[] args)
 		{
+			var a = new ConsoleInteraction();
+			var g = new Game(a, a);
+			g.AddObserver(a);
+			g.Run();
 		}
 	}
 }
