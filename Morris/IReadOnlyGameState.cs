@@ -4,6 +4,7 @@
  * This file is distributed under the terms of the MIT license
  */
 
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Morris
@@ -60,6 +61,16 @@ namespace Morris
 		// Methoden zur Vereinfachung der Arbeit von IMoveProvider
 
 		/// <summary>
+		/// Gibt alle möglichen Spielzüge für den Spieler, der aktuell am Zug ist,
+		/// ohne Informationen über zu entfernende gegnerische Steine zurück.
+		/// 
+		/// Für von dieser Methode zurückgegebene Züge kann mithilfe von
+		/// <see cref="IsValidMove(GameMove)"/> bestimmt werden, ob ein Stein
+		/// entfernt werden darf.
+		/// </summary>
+		IEnumerable<GameMove> BasicMoves();
+
+		/// <summary>
 		/// Bestimmt, ob ein Zug in der aktuellen Spielsituation gültig ist
 		/// </summary>
 		/// <param name="move">Der Zug, der überprüft werden soll</param>
@@ -68,7 +79,7 @@ namespace Morris
 		/// <para><see cref="MoveValidity.ClosesMill"/>, wenn der Zug gültig ist, aber eine Mühle schließt, und kein zu entfernender Stein angegeben wurde.</para>
 		/// <para><see cref="MoveValidity.DoesNotCloseMill"/>, wenn der Zug gültig ist, aber ein zu entfernender Stein angegeben wurde, obwohl der Zug keine Mühle schließt.</para>
 		/// <para><see cref="MoveValidity.Invalid"/>, wenn der Zug ungültig ist.</para>
-		/// </returns
+		/// </returns>
 		MoveValidity IsValidMove(GameMove move);
 	}
 }
