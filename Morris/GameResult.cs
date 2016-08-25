@@ -12,8 +12,8 @@ namespace Morris
 	public enum GameResult
 	{
 		Running,
-		WhiteVictory,
-		BlackVictory,
-		Draw
+		Draw,
+		WhiteVictory = Player.White,
+		BlackVictory = Player.Black
 	}
 }

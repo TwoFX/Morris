@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,52 +16,19 @@ namespace Morris
 	/// <summary>
 	/// Repräsentiert eine Mühle-Spielsituation
 	/// </summary>
-	public class GameState
+	public class GameState : IReadOnlyGameState
 	{
 		public Occupation[] Board { get; private set; }
 		public Player NextToMove { get; private set; }
 		public GameResult Result { get; private set; }
 
 		private Dictionary<Player, Phase> playerPhase;
+		private Dictionary<Player, int> stonesPlaced;
+		private Dictionary<Player, int> currentStones;
 
-		/// <summary>
-		/// Gibt die Phase, in der sich ein Spieler befindet, zurück
-		/// </summary>
-		/// <param name="player">Der Spieler, dessen Phase gesucht ist</param>
-		/// <returns>Eine Phase</returns>
-		public Phase GetPhase(Player player)
-		{
-			return playerPhase[player];
-		}
-
-		private const int FIELD_SIZE = 24;
-
-		static GameState()
-		{
-
-			connections = new bool[FIELD_SIZE, FIELD_SIZE];
-			foreach (int[] mill in mills)
-			{
-				for (int i = 0; i < mill.Length - 1; i++)
-				{
-					connections[mill[i], mill[i + 1]] = true;
-					connections[mill[i + 1], mill[i]] = true;
-				}
-			}
-		}
-
-		public GameState()
-		{
-			// Leeres Feld
-			Board = Enumerable.Repeat(Occupation.Free, FIELD_SIZE).ToArray();
-			NextToMove = Player.White;
-			Result = GameResult.Running;
-			playerPhase = new Dictionary<Player, Phase>()
-			{
-				[Player.Black] = Phase.Placing,
-				[Player.White] = Phase.Placing
-			};
-		}
+		public const int FIELD_SIZE = 24;
+		public const int STONES_MAX = 9;
+		public const int FLYING_MAX = 3;
 
 		// Jeder Eintrag repräsentiert eine mögliche Mühle
 		private static readonly int[][] mills = new[]
@@ -89,6 +57,139 @@ namespace Morris
 		// Gibt an, ob zwei Felder verbunden sind.
 		// Wird aus den Daten in mills im statischen Konstruktor generiert
 		private static bool[,] connections;
+
+		static GameState()
+		{
+			connections = new bool[FIELD_SIZE, FIELD_SIZE];
+			foreach (int[] mill in mills)
+			{
+				for (int i = 0; i < mill.Length - 1; i++)
+				{
+					connections[mill[i], mill[i + 1]] = true;
+					connections[mill[i + 1], mill[i]] = true;
+				}
+			}
+		}
+
+		public GameState()
+		{
+			// Leeres Feld
+			Board = Enumerable.Repeat(Occupation.Free, FIELD_SIZE).ToArray();
+			NextToMove = Player.White;
+			Result = GameResult.Running;
+
+			playerPhase = new Dictionary<Player, Phase>()
+			{
+				[Player.Black] = Phase.Placing,
+				[Player.White] = Phase.Placing
+			};
+
+			stonesPlaced = new Dictionary<Player, int>()
+			{
+				[Player.Black] = 0,
+				[Player.White] = 0
+			};
+
+			currentStones = new Dictionary<Player, int>()
+			{
+				[Player.Black] = 0,
+				[Player.White] = 0
+			};
+		}
+
+		ReadOnlyCollection<Occupation> IReadOnlyGameState.Board
+		{
+			get
+			{
+				return Array.AsReadOnly(Board);
+			}
+		}
+
+		// Die folgenden drei Methoden existieren, weil selbst eine Setter-Only Property,
+		// die die zugrundeliegenden Dictionaries zurückgibt, modifizierbar wäre.
+		// IReadOnlyDictionary ist keine Lösung, weil es Nutzer dieser Klasse eigentlich
+		// nicht interessiert, wie diese Daten gespeichtert sind. In einer späteren Version
+		// könnte sich das auch ändern (weil Dictionaries ziemlich "overkill" zur Speicherung
+		// zweier Ganzzahlen sind).
+
+		/// <summary>
+		/// Gibt die Phase, in der sich ein Spieler befindet, zurück
+		/// </summary>
+		/// <param name="player">Der Spieler, dessen Phase gesucht ist</param>
+		/// <returns>Eine Phase</returns>
+		public Phase GetPhase(Player player)
+		{
+			return playerPhase[player];
+		}
+
+		/// <summary>
+		/// Gibt die von einem Spieler insgesamt gesetzten Steine zurück
+		/// </summary>
+		/// <param name="player">Der Spieler, dessen gesetzten Steine gesucht sind</param>
+		/// <returns>Eine Zahl zwischen 0 und <see cref="STONES_MAX"/></returns>
+		public int GetStonesPlaced(Player player)
+		{
+			return stonesPlaced[player];
+		}
+
+		/// <summary>
+		/// Gibt die Zahl der Steine auf dem Spielfeld, die einem Spieler gehören, zurück
+		/// </summary>
+		/// <param name="player">Der Spieler, dessen aktuelle Steinzahl gesucht ist</param>
+		/// <returns>Eine Zahl zwischen 0 und <see cref="STONES_MAX"/></returns>
+		public int GetCurrentStones(Player player)
+		{
+			return currentStones[player];
+		}
+
+		// Gibt alle Paare von Spielfeldpositionen (p, p2) zurück, sodass
+		// p vom aktuellen Spieler belegt ist und p2 frei ist und
+		// zusätzlich pred(p, p2) erfüllt ist.
+		// Hilfsmethode für BasicMoves; in C# 7 könnte man da eine coole
+		// lokale Funktion draus machen, das hier ist aber ein
+		// C# 6-Projekt...
+		private IEnumerable<GameMove> pairs(Func<int, int, bool> pred)
+		{
+			return Enumerable.Range(0, FIELD_SIZE)
+				.Where(p => (int)Board[p] == (int)NextToMove)
+				.SelectMany(p => Enumerable.Range(0, FIELD_SIZE)
+					.Where(p2 => Board[p2] == Occupation.Free && pred(p, p2))
+					.Select(p2 => GameMove.Move(p, p2)));
+		}
+
+		/// <summary>
+		/// Gibt alle möglichen Spielzüge für den Spieler, der aktuell am Zug ist,
+		/// ohne Informationen über zu entfernende gegnerische Steine zurück.
+		/// 
+		/// Für von dieser Methode zurückgegebene Züge kann mithilfe von
+		/// <see cref="IsValidMove(GameMove)"/> bestimmt werden, ob ein Stein
+		/// entfernt werden darf.
+		/// </summary>
+		public IEnumerable<GameMove> BasicMoves()
+		{
+			switch (playerPhase[NextToMove])
+			{
+				case Phase.Placing:
+					// Ein neuer Zug für alle freien Felder
+					return Enumerable.Range(0, FIELD_SIZE)
+						.Where(p => Board[p] == Occupation.Free)
+						.Select(p => GameMove.Place(p));
+
+				case Phase.Moving:
+					// Ein neuer Zug für jedes Paar von Positionen (p, p2), bei dem
+					// p vom aktuellen Spieler belegt ist und p2 frei und mit p
+					// verbunden ist
+					return pairs((p, p2) => connections[p, p2]);
+
+				case Phase.Flying:
+					// Ein neuer Zug für jedes Paar von Positionen (p, p2), bei dem
+					// p vom aktuellen Spieler belegt ist und p2 frei ist
+					return pairs((p, p2) => true);
+
+				default:
+					throw new InvalidOperationException("Sollte nie erreicht werden");
+			}
+		}
 
 		/// <summary>
 		/// Bestimmt, ob ein Zug in der aktuellen Spielsituation gültig ist
@@ -186,20 +287,33 @@ namespace Morris
 			// ggf. wegbewegter Stein
 			if (move.From.HasValue)
 				Board[move.From.Value] = Occupation.Free;
+			else if (++stonesPlaced[NextToMove] == STONES_MAX)
+				playerPhase[NextToMove] = Phase.Moving;
 
 			// Hinbewegter Stein
 			Board[move.To] = (Occupation)NextToMove;
 
 			// ggf. entfernter Stein
 			if (move.Remove.HasValue)
+			{
 				Board[move.Remove.Value] = Occupation.Free;
+				if (--currentStones[NextToMove.Opponent()] == FLYING_MAX)
+					playerPhase[NextToMove.Opponent()] = Phase.Flying;
+			}
+
+			// Gegner hat nur noch zwei Steine
+			if (currentStones[NextToMove.Opponent()] == 2)
+				Result = (GameResult)NextToMove;
 
 			// Gegner ist jetzt dran
 			NextToMove = NextToMove.Opponent();
 
+			// Wenn der (jetzt) aktuelle Spieler keine gültigen Züge hat,
+			// hat er verloren
+			if (!BasicMoves().Any())
+				Result = (GameResult)NextToMove.Opponent();
+
 			return MoveResult.OK;
 		}
-
-
 	}
 }

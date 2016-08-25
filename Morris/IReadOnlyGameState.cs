@@ -4,18 +4,14 @@
  * This file is distributed under the terms of the MIT license
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
 namespace Morris
 {
 	/// <summary>
 	/// Eine schreibgeschützte Sicht auf ein Spielfeld, anhand der ein <see cref="IMoveProvider"/>
-	/// einen Nachfolgezug bestimmen soll
+	/// einen Nachfolgezug bestimmen soll und ein <see cref="IGameStateObserver"/> die Spielsituation
+	/// komsumieren kann
 	/// </summary>
 	public interface IReadOnlyGameState
 	{
@@ -38,6 +34,7 @@ namespace Morris
 
 
 		// Methoden, die Auskunft über die Spielsituation geben
+		// (siehe hierzu auch den Kommentar in GameState.cs)
 
 		/// <summary>
 		/// Gibt die Phase, in der sich ein Spieler befindet, zurück
@@ -46,6 +43,19 @@ namespace Morris
 		/// <returns>Eine Phase</returns>
 		Phase GetPhase(Player player);
 
+		/// <summary>
+		/// Gibt die von einem Spieler insgesamt gesetzten Steine zurück
+		/// </summary>
+		/// <param name="player">Der Spieler, dessen gesetzten Steine gesucht sind</param>
+		/// <returns>Eine Zahl zwischen 0 und <see cref="STONES_MAX"/></returns>
+		int GetStonesPlaced(Player player);
+
+		/// <summary>
+		/// Gibt die Zahl der Steine auf dem Spielfeld, die einem Spieler gehören, zurück
+		/// </summary>
+		/// <param name="player">Der Spieler, dessen aktuelle Steinzahl gesucht ist</param>
+		/// <returns>Eine Zahl zwischen 0 und <see cref="STONES_MAX"/></returns>
+		int GetCurrentStones(Player player);
 
 		// Methoden zur Vereinfachung der Arbeit von IMoveProvider
 

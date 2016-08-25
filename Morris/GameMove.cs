@@ -70,11 +70,34 @@ namespace Morris
 		/// </summary>
 		/// <param name="from">Wo sich der Stein vor dem Zug befindet</param>
 		/// <param name="to">Wo sich der Stein nach dem Zug befindet</param>
-		/// <param name="remove">Welcher gegnerische Stein bewegt werden soll</param>
+		/// <param name="remove">Welcher gegnerische Stein entfernt werden soll</param>
 		/// <returns>Einen nicht zwangsläufig gültigen Spielzug</returns>
 		public static GameMove MoveRemove(int from, int to, int remove)
 		{
 			return new GameMove(from, to, remove);
+		}
+
+		// Die nachfolgenden beiden Methoden existieren, weil GameMove immutable sein soll, damit es keine lustigen
+		// Aliasing-Bugs gibt, wenn MoveProviders komische Dinge mit den Zügen machen, die sie von GameState.BasicMoves
+		// zurückbekommen
+
+		/// <summary>
+		/// Gibt eine Kopie des GameMove ohne Informationen zur Entfernung zurück
+		/// </summary>
+		/// <returns>Eine neuen Spielzug</returns>
+		public GameMove WithoutRemove()
+		{
+			return new GameMove(From, To, null);
+		}
+
+		/// <summary>
+		/// Erstellt eine Kopie des GameMove mit Zusatzinformation zur Entfernung eines gegnerischen Steins zurück
+		/// </summary>
+		/// <param name="remove">Welcher gegnerische Stein entfernt werden soll</param>
+		/// <returns>Einen neuen Spielzug</returns>
+		public GameMove WithRemove(int remove)
+		{
+			return new GameMove(From, To, remove);
 		}
 	}
 }
