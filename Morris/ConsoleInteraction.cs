@@ -79,11 +79,15 @@ namespace Morris
 				}
 			}
 
-			// Spielfeld tatsächlich ausgeben
-			foreach (var row in field)
+			// Spielfeld mit Koordinaten ausgeben
+			for (int i = 0; i < 13; i++)
 			{
-				Console.WriteLine(new string(row));
+				Console.Write(i % 2 == 0 ? (char)('0' + 7 - i / 2) : ' ');
+				Console.Write(' ');
+				Console.WriteLine(new string(field[i]));
 			}
+			Console.Write("  ");
+			Console.WriteLine(string.Join(" ", Enumerable.Range('a', 7).Select(x => (char)x)));
 
 			// Spielstatus mitteilen, falls das Spiel nicht mehr läuft.
 			switch (state.Result)

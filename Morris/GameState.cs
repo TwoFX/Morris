@@ -22,6 +22,8 @@ namespace Morris
 		public Player NextToMove { get; private set; }
 		public GameResult Result { get; private set; }
 
+		private List<Occupation[]> history = new List<Occupation[]>();
+			 
 		private Dictionary<Player, Phase> playerPhase;
 		private Dictionary<Player, int> stonesPlaced;
 		private Dictionary<Player, int> currentStones;
@@ -293,6 +295,8 @@ namespace Morris
 
 			// Weiteres Error Checking ist nicht notwendig, da dieses in IsValidMove vorgenommen wurde
 
+			history.Add((Occupation[])Board.Clone());
+
 			// ggf. wegbewegter Stein
 			if (move.From.HasValue)
 				Board[move.From.Value] = Occupation.Free;
@@ -306,11 +310,15 @@ namespace Morris
 			// Hinbewegter Stein
 			Board[move.To] = (Occupation)NextToMove;
 
+			// Wiederholte Stellung
+			if (!playerPhase.Values.Contains(Phase.Placing) && history.Any(pastBoard => Board.SequenceEqual(pastBoard)))
+				Result = GameResult.Draw;
+
 			// ggf. entfernter Stein
 			if (move.Remove.HasValue)
 			{
 				Board[move.Remove.Value] = Occupation.Free;
-				if (--currentStones[NextToMove.Opponent()] == FLYING_MAX)
+				if (playerPhase[NextToMove.Opponent()] == Phase.Moving & --currentStones[NextToMove.Opponent()] == FLYING_MAX)
 					playerPhase[NextToMove.Opponent()] = Phase.Flying;
 			}
 
