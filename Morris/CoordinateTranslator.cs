@@ -47,12 +47,12 @@ namespace Morris
 
 		// Die XML-Kommentare sind hier ausgelassen, weil die Methodennamen ausreichend sprechend sein sollten
 
-		public static Tuple<int, int> CoordinatesFromHumanReadable(string human)
+		public static int[] CoordinatesFromHumanReadable(string human)
 		{
 			if (!humans.Keys.Contains(human))
 				throw new ArgumentException("Dies ist keine gültige Positionsangabe");
 
-			return Tuple.Create(human[0] - 'a', human[1] - '1');
+			return new[] { 6 - (human[1] - '1'), human[0] - 'a' };
 		}
 
 		public static string HumanReadableFromCoordinates(Tuple<int, int> coord)
@@ -65,7 +65,7 @@ namespace Morris
 			throw new ArgumentException("Dies sind keine gültigen Koordinaten");
 		}
 
-		public static Tuple<int, int> CoordinatesFromID(int id)
+		public static int[] CoordinatesFromID(int id)
 		{
 			return CoordinatesFromHumanReadable(HumanReadableFromID(id));
 		}

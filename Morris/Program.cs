@@ -14,6 +14,7 @@ namespace Morris
 			var g = new Game(a, a);
 			g.AddObserver(a);
 			g.Run();
+			Console.ReadKey();
 		}
 	}
 }

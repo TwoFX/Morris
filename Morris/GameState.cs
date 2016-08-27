@@ -50,7 +50,7 @@ namespace Morris
 			new[] { 1, 4, 7 },
 			new[] { 16, 19, 22 },
 			new[] { 8, 12, 17 },
-			new[] { 5, 12, 20 },
+			new[] { 5, 13, 20 },
 			new[] { 2, 14, 23 }
 		}.Select(mill => Array.AsReadOnly(mill)).ToArray());
 
@@ -296,8 +296,12 @@ namespace Morris
 			// ggf. wegbewegter Stein
 			if (move.From.HasValue)
 				Board[move.From.Value] = Occupation.Free;
-			else if (++stonesPlaced[NextToMove] == STONES_MAX)
-				playerPhase[NextToMove] = Phase.Moving;
+			else
+			{
+				currentStones[NextToMove]++;
+				if (++stonesPlaced[NextToMove] == STONES_MAX)
+					playerPhase[NextToMove] = Phase.Moving;
+			}
 
 			// Hinbewegter Stein
 			Board[move.To] = (Occupation)NextToMove;
@@ -311,7 +315,7 @@ namespace Morris
 			}
 
 			// Gegner hat nur noch zwei Steine
-			if (currentStones[NextToMove.Opponent()] == 2)
+			if (playerPhase[NextToMove.Opponent()] != Phase.Placing && currentStones[NextToMove.Opponent()] == 2)
 				Result = (GameResult)NextToMove;
 
 			// Gegner ist jetzt dran

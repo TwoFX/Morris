@@ -1,53 +1,104 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+ * ConsoleInteraction.cs
+ * Copyright (c) 2016 Markus Himmel
+ * This file is distributed under the terms of the MIT license.
+ */
+
+using System;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Morris
 {
+	/// <summary>
+	/// Ermöglicht Eingabe und Ausgabe der Spielsituation auf der Konsole.
+	/// </summary>
 	class ConsoleInteraction : IGameStateObserver, IMoveProvider
 	{
+		public ConsoleInteraction()
+		{
+			// Konsolenparameter setzen
+			Console.OutputEncoding = Encoding.Unicode;
+			Console.BackgroundColor = ConsoleColor.White;
+			Console.ForegroundColor = ConsoleColor.Black;
+			Console.Clear();
+		}
+
 		public void Notify(IReadOnlyGameState state)
 		{
-			// Ein mit Leerzeichen initialisiertes 8*8 Jagged Array
-			char[][] field = Enumerable.Repeat(0, 8).Select(_ => Enumerable.Repeat(' ', 8).ToArray()).ToArray();
+			// Ein mit Leerzeichen initialisiertes 13*13 Jagged Array
+			char[][] field = Enumerable.Repeat(0, 13).Select(_ => Enumerable.Repeat(' ', 13).ToArray()).ToArray();
 
+			// Spielpositionen mit Belegung
 			for (int i = 0; i < GameState.FIELD_SIZE; i++)
 			{
-				var point = CoordinateTranslator.CoordinatesFromID(i);
+				var point = CoordinateTranslator.CoordinatesFromID(i).Select(x => 2 * x).ToArray();
 				switch (state.Board[i])
 				{
 					case Occupation.Free:
-						field[point.Item1][point.Item2] = 'F';
+						field[point[0]][point[1]] = '▫';
 						break;
 
 					case Occupation.Black:
-						field[point.Item1][point.Item2] = 'B';
+						field[point[0]][point[1]] = '●';
 						break;
 
 					case Occupation.White:
-						field[point.Item1][point.Item2] = 'W';
+						field[point[0]][point[1]] = '○';
 						break;
 
 				}
 			}
 
-			//for (int i = 0; i < GameState.FIELD_SIZE; i++)
-			//{
-			//	foreach (int j in GameState.GetConnected(i))
-			//	{
+			// Linien auf dem Spielfeld zeichnen. Wo diese hingehören, wird aus den Verbindungsdaten, die GameState
+			// bereithält, "on the fly" bestimmt. Diesen Schritt des Zeichnens des Spielfelds könnte man cachen,
+			// das wäre hier aber mit Blick auf die Größe des Spielfelds eine premature optimization.
+			for (int i = 0; i < GameState.FIELD_SIZE; i++)
+			{
+				var pointI = CoordinateTranslator.CoordinatesFromID(i).Select(x => 2 * x).ToArray();
+				foreach (int j in GameState.GetConnected(i).Where(j => j < i))
+				{
+					var pointJ = CoordinateTranslator.CoordinatesFromID(j).Select(x => 2 * x).ToArray();
 
-			//	}
-			//}
+					if (pointI[0] == pointJ[0])
+					{
+						// Horizontale Linien
+						for (int k = Math.Min(pointI[1], pointJ[1]) + 1; k <= Math.Max(pointI[1], pointJ[1]) - 1; k++)
+						{
+							field[pointI[0]][k] = '-';
+						}
+					}
+					else
+					{
+						// Vertikale Linien
+						for (int k = Math.Min(pointI[0], pointJ[0]) + 1; k <= Math.Max(pointI[0], pointJ[0]) - 1; k++)
+						{
+							field[k][pointI[1]] = '|';
+						}
+					}
+				}
+			}
 
+			// Spielfeld tatsächlich ausgeben
 			foreach (var row in field)
 			{
 				Console.WriteLine(new string(row));
 			}
+
+			// Spielstatus mitteilen, falls das Spiel nicht mehr läuft.
+			switch (state.Result)
+			{
+				case GameResult.BlackVictory:
+					Console.WriteLine("Schwarz hat gewonnen.");
+					break;
+				case GameResult.WhiteVictory:
+					Console.WriteLine("Weiß hat gewonnnen.");
+					break;
+				case GameResult.Draw:
+					Console.WriteLine("Unentschieden.");
+					break;
+			}
 		}
-
-
 
 		public GameMove GetNextMove(IReadOnlyGameState state)
 		{
@@ -57,7 +108,20 @@ namespace Morris
 			{
 				try
 				{
-					Console.Write("Bitte gib einen Zug ein: ");
+					string phase;
+					switch (state.GetPhase(state.NextToMove))
+					{
+						case Phase.Placing:
+							phase = "Platziert";
+							break;
+						case Phase.Moving:
+							phase = "Bewegt";
+							break;
+						default:
+							phase = "Fliegt";
+							break;
+					}
+					Console.Write($"{(state.NextToMove == Player.Black ? "Schwarz" : "Weiß")} am Zug ({phase}): ");
 
 					// Eingabe parsen
 					var input = Console.ReadLine().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -84,7 +148,7 @@ namespace Morris
 				}
 				catch
 				{
-					// Einfach nocheinmal versuchen...
+					// Einfach nocheinmal fragen, wenn der Input nicht geparst werden konnte
 				}
 			}
 		}
