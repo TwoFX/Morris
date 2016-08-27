@@ -55,9 +55,9 @@ namespace Morris
 			return new[] { 6 - (human[1] - '1'), human[0] - 'a' };
 		}
 
-		public static string HumanReadableFromCoordinates(Tuple<int, int> coord)
+		public static string HumanReadableFromCoordinates(int[] coord)
 		{
-			string res = new string(new [] { 'a' + coord.Item1, '1' + (char)coord.Item2 }.Cast<char>().ToArray());
+			string res = new string(new[] { 'a' + coord[1], '1' + coord[0] }.Select(x => (char)x).ToArray());
 
 			if (humans.Keys.Contains(res))
 				return res;
@@ -70,7 +70,7 @@ namespace Morris
 			return CoordinatesFromHumanReadable(HumanReadableFromID(id));
 		}
 
-		public static int IDFromCoordinates(Tuple<int, int> coord)
+		public static int IDFromCoordinates(int[] coord)
 		{
 			return IDFromHumanReadable(HumanReadableFromCoordinates(coord));
 		}

@@ -218,6 +218,9 @@ namespace Morris
 			// bedingte Anweisung gepackt, auch wenn dies kompakter und eventuell marginal
 			// schneller wäre
 
+			if (move == null)
+				return MoveValidity.Invalid;
+
 			// 1.: Ziel verifizieren
 			if (move.To < 0 || move.To >= FIELD_SIZE)
 				return MoveValidity.Invalid; // OOB
@@ -315,7 +318,7 @@ namespace Morris
 			Board[move.To] = (Occupation)NextToMove;
 
 			// Wiederholte Stellung
-			if (!playerPhase.Values.Contains(Phase.Placing) && history.Any(pastBoard => Board.SequenceEqual(pastBoard)))
+			if (!playerPhase.Values.All(phase => phase == Phase.Placing) && history.Any(pastBoard => Board.SequenceEqual(pastBoard)))
 				Result = GameResult.Draw;
 
 			// ggf. entfernter Stein

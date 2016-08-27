@@ -15,10 +15,10 @@ namespace Morris
 			var a = new ConsoleInteraction();
 			var b = new RandomBot();
 			var w = new GameWindow();
-			var g = new Game(b, b);
+			var g = new Game(w, w);
 			g.AddObserver(a);
 			g.AddObserver(w);
-			Task.Run(() => g.Run());
+			Task.Run(() => g.Run(0));
 			new Application().Run(w);
 		}
 	}
