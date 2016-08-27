@@ -49,6 +49,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameResult.cs" />
     <Compile Include="GameState.cs" />
+    <Compile Include="RandomBot.cs" />
     <None Include="LICENSE" />
     <Compile Include="IGameStateObserver.cs" />
     <Compile Include="IMoveProvider.cs" />

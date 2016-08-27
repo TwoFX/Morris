@@ -19,5 +19,15 @@ namespace Morris
 			// der .Opponent verwendet, ist einfacher zu erkennen (Kapselung).
 			return ~p;
 		}
+
+		private static Random rng = new Random();
+
+		/// <summary>
+		/// Gibt ein zufälliges Element der IList zurück
+		/// </summary>
+		public static T ChooseRandom<T>(this IList<T> it)
+		{
+			return it[rng.Next(it.Count)];
+		}
 	}
 }

@@ -244,7 +244,11 @@ namespace Morris
 				return MoveValidity.Invalid; // Darf keinen Stein mehr platzieren
 
 			// 3.: Wurde eine Mühle geschlossen?
-			bool millClosed = Mills.Any(mill => mill.Contains(move.To) && mill.All(point => (int)Board[point] == (int)NextToMove || point == move.To));
+			bool millClosed = Mills.Any(mill => // Es muss eine potentielle Mühle geben, die
+				mill.Contains(move.To) && // den neu gesetzten Stein enthält und
+				mill.All(point =>  // bei der alle Punkte
+					(!move.From.HasValue || point != move.From) && // nicht der Ursprungspunkt der aktuellen Steinbewegung sind und
+					(int)Board[point] == (int)NextToMove || point == move.To)); // entweder schon vom Spieler bestzt sind oder Ziel der aktuellen Steinbewegung sind.
 
 			// 4.: Verifikation des Mühlenparameters
 			if (millClosed)
