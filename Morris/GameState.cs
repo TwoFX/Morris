@@ -322,6 +322,7 @@ namespace Morris
 			if (move.Remove.HasValue)
 			{
 				Board[move.Remove.Value] = Occupation.Free;
+				// Hier darf kein short-circuiting verwendet werden
 				if (playerPhase[NextToMove.Opponent()] == Phase.Moving & --currentStones[NextToMove.Opponent()] == FLYING_MAX)
 					playerPhase[NextToMove.Opponent()] = Phase.Flying;
 			}

@@ -91,7 +91,7 @@ namespace Morris
 		}
 
 		/// <summary>
-		/// Erstellt eine Kopie des GameMove mit Zusatzinformation zur Entfernung eines gegnerischen Steins zurück
+		/// Gibt eine Kopie des GameMove mit Zusatzinformation zur Entfernung eines gegnerischen Steins zurück
 		/// </summary>
 		/// <param name="remove">Welcher gegnerische Stein entfernt werden soll</param>
 		/// <returns>Einen neuen Spielzug</returns>
