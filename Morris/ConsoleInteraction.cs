@@ -26,6 +26,8 @@ namespace Morris
 
 		public void Notify(IReadOnlyGameState state)
 		{
+			Console.Clear();
+
 			// Ein mit Leerzeichen initialisiertes 13*13 Jagged Array
 			char[][] field = Enumerable.Repeat(0, 13).Select(_ => Enumerable.Repeat(' ', 13).ToArray()).ToArray();
 
