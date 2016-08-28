@@ -130,25 +130,27 @@ namespace Morris
 					Console.Write($"{(state.NextToMove == Player.Black ? "Schwarz" : "Weiß")} am Zug ({phase}): ");
 
 					// Eingabe parsen
-					var input = Console.ReadLine().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-					var inputPositions = input.Skip(1).Select(pos => CoordinateTranslator.IDFromHumanReadable(pos)).ToArray();
-
-					switch (input[0])
+					// Format {a1-}b2{,c3}
+					// Bedeutet setze von a1 nach b2 und schlage c3
+					// Teile in {} sind optional
+					var rawInput = Console.ReadLine().ToLower();
+					var input = rawInput.Split(new[] { ',', '-' }).Select(pos => CoordinateTranslator.IDFromHumanReadable(pos)).ToArray();
+					switch (input.Length)
 					{
-						case "p": // place
-							return GameMove.Place(inputPositions[0]);
+						case 1:
+							return GameMove.Place(input[0]);
 
-						case "pr": // place remove
-							return GameMove.PlaceRemove(inputPositions[0], inputPositions[1]);
-
-						case "m": // move
-							return GameMove.Move(inputPositions[0], inputPositions[1]);
-
-						case "mr": // move remove
-							return GameMove.MoveRemove(inputPositions[0], inputPositions[1], inputPositions[2]);
-
-						default:
+						case 2:
+							if (rawInput[2] == '-')
+								return GameMove.Move(input[0], input[1]);
+							if (rawInput[2] == ',')
+								return GameMove.PlaceRemove(input[0], input[1]);
 							throw new InvalidOperationException();
+
+						case 3:
+							if (rawInput[2] != '-' || rawInput[5] != ',')
+								throw new InvalidOperationException();
+							return GameMove.MoveRemove(input[0], input[1], input[2]);
 					}
 
 				}
