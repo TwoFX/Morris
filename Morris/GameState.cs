@@ -317,10 +317,6 @@ namespace Morris
 			// Hinbewegter Stein
 			Board[move.To] = (Occupation)NextToMove;
 
-			// Wiederholte Stellung
-			if (!playerPhase.Values.All(phase => phase == Phase.Placing) && history.Any(pastBoard => Board.SequenceEqual(pastBoard)))
-				Result = GameResult.Draw;
-
 			// ggf. entfernter Stein
 			if (move.Remove.HasValue)
 			{
@@ -329,6 +325,11 @@ namespace Morris
 				if (playerPhase[NextToMove.Opponent()] == Phase.Moving & --currentStones[NextToMove.Opponent()] == FLYING_MAX)
 					playerPhase[NextToMove.Opponent()] = Phase.Flying;
 			}
+
+			// Wiederholte Stellung
+			if (!playerPhase.Values.All(phase => phase == Phase.Placing) && history.Any(pastBoard => Board.SequenceEqual(pastBoard)))
+				Result = GameResult.Draw;
+
 
 			// Gegner hat nur noch zwei Steine
 			if (playerPhase[NextToMove.Opponent()] != Phase.Placing && currentStones[NextToMove.Opponent()] == 2)

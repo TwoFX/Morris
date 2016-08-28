@@ -352,7 +352,10 @@ namespace Morris
 				// Ungültiges Feld, einfach einen ungültigen Zug zurückgeben, damit GetNextMove
 				// erneut aufgerufen wird
 				if (error)
-					return null; 
+				{
+					Dispatcher.Invoke(() => resetPositon(source));
+					return null;
+				}
 
 				// Source und Destination erhalten Anfang und Ende des Drag-Events
 				mode = Mode.Normal;
