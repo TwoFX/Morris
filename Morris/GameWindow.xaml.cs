@@ -18,7 +18,8 @@ namespace Morris
 	/// <summary>
 	/// Eine WPF-gestütze Mühle-GUI
 	/// </summary>
-	public partial class GameWindow : Window, IGameStateObserver, IMoveProvider
+	[SelectorName("GUI"), SingleInstance]
+	internal partial class GameWindow : Window, IGameStateObserver, IMoveProvider
 	{
 		// Diese konstanten Steuern das Aussehen des Spielfelds.
 		private const int BLOCK_SIZE = 100; // Sollte durch 2 teilbar sein
@@ -134,6 +135,8 @@ namespace Morris
 			status.Margin = new Thickness(OFFSET_LEFT, STATUS_OFFSET_TOP, 0, 0);
 			status.FontSize = STATUS_SIZE;
 			grid.Children.Add(status);
+
+			Show();
 		}
 
 		public void Notify(IReadOnlyGameState state)

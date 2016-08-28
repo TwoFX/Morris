@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morris", "Morris\Morris.csproj", "{E3CCB2E8-5840-4442-8A66-177F5DF4C4F5}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ExternalBotTest", "ExternalBotTest\ExternalBotTest.fsproj", "{712DA2C7-1B88-4DDB-8B79-46AF5D5F6B19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{E3CCB2E8-5840-4442-8A66-177F5DF4C4F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3CCB2E8-5840-4442-8A66-177F5DF4C4F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3CCB2E8-5840-4442-8A66-177F5DF4C4F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{712DA2C7-1B88-4DDB-8B79-46AF5D5F6B19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{712DA2C7-1B88-4DDB-8B79-46AF5D5F6B19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{712DA2C7-1B88-4DDB-8B79-46AF5D5F6B19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{712DA2C7-1B88-4DDB-8B79-46AF5D5F6B19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

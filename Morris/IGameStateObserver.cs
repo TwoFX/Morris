@@ -10,7 +10,7 @@ namespace Morris
 	/// Eine Entität, die ein Spiel "abbonieren" kann und dann über Änderungen
 	/// des Spielzustands in Kenntnis gesetzt wird
 	/// </summary>
-	interface IGameStateObserver
+	public interface IGameStateObserver
 	{
 		/// <summary>
 		/// Wird aufgerufen, wenn sich der aktuelle Spielzustand geändert hat

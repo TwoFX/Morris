@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Morris
 {
-	internal static class ExtensionMethods
+	public static class ExtensionMethods
 	{
 		/// <summary>
 		/// Gibt den Gegner des Spielers zurück

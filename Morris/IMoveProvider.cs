@@ -12,7 +12,7 @@ namespace Morris
 	/// (also in der Regel entweder eine Benutzeroberfläche oder
 	/// ein Bot).
 	/// </summary>
-	interface IMoveProvider
+	public interface IMoveProvider
 	{
 		/// <summary>
 		/// Bestimmt den nächsten Spielzug

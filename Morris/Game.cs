@@ -12,13 +12,43 @@ namespace Morris
 	/// <summary>
 	/// Repräsentiert ein einzelnes Mühlespiel
 	/// </summary>
-	class Game
+	internal class Game
 	{
 		private List<IGameStateObserver> observers = new List<IGameStateObserver>();
 		private GameState state;
 		private Dictionary<Player, IMoveProvider> providers;
+		
+		public IMoveProvider White
+		{
+			get
+			{
+				return providers[Player.White];
+			}
+			set
+			{
+				providers[Player.White] = value;
+			}
+		}
 
-		public Game(IMoveProvider white, IMoveProvider black)
+		public IMoveProvider Black
+		{
+			get
+			{
+				return providers[Player.Black];
+			}
+			set
+			{
+				providers[Player.Black] = value;
+			}
+		}
+
+		public int Delay
+		{
+			get;
+			set;
+		}
+
+		public Game(IMoveProvider white, IMoveProvider black, int delay)
 		{
 			state = new GameState();
 			providers = new Dictionary<Player, IMoveProvider>()
@@ -26,6 +56,7 @@ namespace Morris
 				[Player.White] = white,
 				[Player.Black] = black
 			};
+			Delay = delay;
 		}
 
 		/// <summary>
@@ -35,7 +66,7 @@ namespace Morris
 		/// erfolgreichem Zug der nächste Zug angefordert wird (damit KI vs. KI-Spiele in einem
 		/// angemessenen Tempo angesehen werden können)</param>
 		/// <returns>Das Spielergebnis</returns>
-		public GameResult Run(int moveDelay = 0)
+		public GameResult Run()
 		{
 			notifyOberservers();
 			MoveResult res;
@@ -50,7 +81,7 @@ namespace Morris
 				} while (res == MoveResult.InvalidMove);
 
 				notifyOberservers();
-				Thread.Sleep(moveDelay);
+				Thread.Sleep(Delay);
 			} while (state.Result == GameResult.Running);
 
 			return state.Result;
@@ -63,6 +94,7 @@ namespace Morris
 		public void AddObserver(IGameStateObserver observer)
 		{
 			observers.Add(observer);
+			observer.Notify(state);
 		}
 
 		/// <summary>

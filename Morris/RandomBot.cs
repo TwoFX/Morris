@@ -12,7 +12,7 @@ namespace Morris
 	/// <summary>
 	/// Ein extrem einfacher KI-Spieler, der einen zufälligen gültigen Spielzug auswählt
 	/// </summary>
-	class RandomBot : IMoveProvider
+	internal class RandomBot : IMoveProvider
 	{
 		// Anhand dieser Klasse können wir sehen, wie einfach es ist, einen Computerspieler zu implementieren.
 		// Es muss lediglich eine einzige, einfache Methode implementiert werden. Der Spielzustandparameter stellt

@@ -13,7 +13,8 @@ namespace Morris
 	/// <summary>
 	/// Ermöglicht Eingabe und Ausgabe der Spielsituation auf der Konsole.
 	/// </summary>
-	class ConsoleInteraction : IGameStateObserver, IMoveProvider
+	[SelectorName("Konsole"), SingleInstance]
+	internal class ConsoleInteraction : IGameStateObserver, IMoveProvider
 	{
 		public ConsoleInteraction()
 		{

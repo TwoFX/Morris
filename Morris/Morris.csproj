@@ -49,6 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleInteraction.cs" />
+    <Compile Include="Controller.xaml.cs">
+      <DependentUpon>Controller.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CoordinateTranslator.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Game.cs" />
@@ -69,11 +72,18 @@
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectorType.cs" />
+    <Compile Include="SelectorNameAttribute.cs" />
+    <Compile Include="SingleInstanceAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controller.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -13,7 +13,7 @@ namespace Morris
 	/// <summary>
 	/// Statische Klasse, die Methoden bereitstellt um Spielfeldpositionen zwischen verschiedenen Formaten zu überführen
 	/// </summary>
-	static class CoordinateTranslator
+	public static class CoordinateTranslator
 	{
 		private static Dictionary<string, int> humans = new Dictionary<string, int>()
 		{
