@@ -156,6 +156,7 @@ namespace Morris
 
 			gameThread = new Thread(() => theGame.Run());
 			gameThread.Start();
+			
 		}
 
 		private void white_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -205,9 +206,9 @@ namespace Morris
 					throw new Exception();
 				populateLists(new[] { assembly });
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				MessageBox.Show("Assembly konnte nicht geladen werden.");
+				MessageBox.Show($"Assembly konnte nicht geladen werden: {ex.Message} ({ex.GetType().ToString()})");
 			}
 		}
 

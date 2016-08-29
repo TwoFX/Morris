@@ -62,9 +62,6 @@ namespace Morris
 		/// <summary>
 		/// Spielt eine gesamte Runde Mühle
 		/// </summary>
-		/// <param name="moveDelay">Die Zeit, in Millisekunden, die gewartet wird, bevor nach einem
-		/// erfolgreichem Zug der nächste Zug angefordert wird (damit KI vs. KI-Spiele in einem
-		/// angemessenen Tempo angesehen werden können)</param>
 		/// <returns>Das Spielergebnis</returns>
 		public GameResult Run()
 		{

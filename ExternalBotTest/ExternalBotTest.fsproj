@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Debug\ExternalBotTest.XML</DocumentationFile>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,11 +33,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Release\ExternalBotTest.XML</DocumentationFile>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Morris">
-      <HintPath>D:\Users\marku\Documents\Visual Studio 2015\Projects\Morris\Morris\bin\Debug\Morris.exe</HintPath>
-    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
@@ -49,6 +48,13 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="FSharpRandomBot.fs" />
     <None Include="Script.fsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Morris\Morris.csproj">
+      <Name>Morris</Name>
+      <Project>{e3ccb2e8-5840-4442-8a66-177f5df4c4f5}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

@@ -176,6 +176,10 @@ namespace Morris
 					case GameResult.Draw:
 						status.Content = "Unentschieden";
 						break;
+
+					case GameResult.Running:
+						status.Content = null;
+						break;
 				}
 			});
 		}

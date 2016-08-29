@@ -271,7 +271,7 @@ namespace Morris
 				// "Für alle gegnerischen Steine gilt, dass eine Mühle existiert, die diesen Stein enthält und von der alle
 				// Felder durch gegnerische Steine besetzt sind (die Mühle also geschlossen ist)"
 				bool allInMill = Enumerable.Range(0, FIELD_SIZE)
-					.Where(point => (int)Board[point] != (int)NextToMove.Opponent())
+					.Where(point => (int)Board[point] == (int)NextToMove.Opponent())
 					.All(point => Mills.Any(mill => mill.Contains(point) && mill.All(mp => (int)Board[point] == (int)NextToMove.Opponent())));
 
 				if (!allInMill && Mills.Any(mill => mill.Contains(move.Remove.Value) && mill.All(point => (int)Board[point] == (int)NextToMove.Opponent())))
