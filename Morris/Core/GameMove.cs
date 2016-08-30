@@ -35,7 +35,7 @@ namespace Morris
 
 		public override string ToString()
 		{
-			return $"{(!From.HasValue ? string.Empty : CoordinateTranslator.HumanReadableFromID(From.Value) + "-")}{CoordinateTranslator.HumanReadableFromID(To)}{(Remove.HasValue ? "," + CoordinateTranslator.HumanReadableFromID(Remove.Value) : string.Empty)}";
+			return $"{(!From.HasValue ? string.Empty : CoordinateTranslator.HumanReadableFromID(From.Value) + "-")}{CoordinateTranslator.HumanReadableFromID(To)}{(Remove.HasValue ? "," + CoordinateTranslator.HumanReadableFromID(Remove.Value) : string.Empty)}".ToUpper();
 		}
 
 		/// <summary>

@@ -33,6 +33,15 @@ namespace Morris
 		/// </summary>
 		GameResult Result { get; }
 
+		/// <summary>
+		/// Gibt an, wie viele Züge vergangen sind, seit sich die Zahl der Steine auf dem Spielfeld das letzte Mal verändert hat
+		/// </summary>
+		int MovesSinceLastStoneCountChange { get; }
+
+		/// <summary>
+		/// Alle Vergangenen Zustände des Spielfelds
+		/// </summary>
+		IEnumerable<ReadOnlyCollection<Occupation>> History { get; }
 
 		// Methoden, die Auskunft über die Spielsituation geben
 		// (siehe hierzu auch den Kommentar in GameState.cs)

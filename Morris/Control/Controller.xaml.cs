@@ -10,7 +10,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Reflection;
-using System.Threading;
 using System.Collections.ObjectModel;
 using Microsoft.Win32;
 
@@ -31,9 +30,8 @@ namespace Morris
 			displayBox.ItemsSource = displays;
 		}
 
-		// Das aktuelle Spiel und der Thread, auf dem es läuft
+		// Das aktuelle Spiel
 		private Game theGame;
-		private Thread gameThread;
 
 		// Die Objekte, die die ComboBoxen und die ListBox nehmen und wieder zurückgeben
 		private ObservableCollection<SelectorType> players = new ObservableCollection<SelectorType>();
@@ -138,8 +136,8 @@ namespace Morris
 		private void newGame_Click(object sender, RoutedEventArgs e)
 		{
 			// Altes Spiel terminieren
-			if (gameThread != null)
-				gameThread.Abort();
+			if (theGame != null)
+				theGame.Stop();
 
 			var white = getFromBox(whiteBox);
 			var black = getFromBox(blackBox);
@@ -148,15 +146,14 @@ namespace Morris
 				return;
 
 			theGame = new Game(white, black, (int)delay.Value);
+			moveBox.ItemsSource = theGame.Moves;
 
 			foreach (SelectorType type in displayBox.SelectedItems)
 			{
 				tryAddDisplay(type);
 			}
 
-			gameThread = new Thread(() => theGame.Run());
-			gameThread.Start();
-			
+			theGame.Start();		
 		}
 
 		private void white_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -216,6 +213,11 @@ namespace Morris
 		{
 			if (theGame != null)
 				theGame.Delay = (int)e.NewValue;
+		}
+
+		private void moveBox_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			theGame.RewindTo(moveBox.SelectedItem as GameMove);
 		}
 	}
 }

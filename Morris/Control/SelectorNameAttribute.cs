@@ -1,6 +1,6 @@
 ﻿/*
  * SelectorNameAttribute.cs
- * Copyright (c) 2016 Makrus Himmel
+ * Copyright (c) 2016 Markus Himmel
  * This file is distributed un der the terms of the MIT license
  */
 

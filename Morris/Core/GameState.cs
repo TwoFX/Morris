@@ -21,6 +21,7 @@ namespace Morris
 		public Occupation[] Board { get; private set; }
 		public Player NextToMove { get; private set; }
 		public GameResult Result { get; private set; }
+		public int MovesSinceLastStoneCountChange { get; private set; } // Tut mir leid.. mir ist kein besserer Name einfallen
 
 		private List<Occupation[]> history = new List<Occupation[]>();
 			 
@@ -31,6 +32,7 @@ namespace Morris
 		public const int FIELD_SIZE = 24;
 		public const int STONES_MAX = 9;
 		public const int FLYING_MAX = 3;
+		public const int UNCHANGED_MOVES_MAX = 50;
 
 		// Jeder Eintrag repräsentiert eine mögliche Mühle
 		public static readonly ReadOnlyCollection<ReadOnlyCollection<int>> Mills = Array.AsReadOnly(new[]
@@ -73,15 +75,6 @@ namespace Morris
 			}
 		}
 
-		/// <summary>
-		/// Gibt alle Felder zurück, die mit einem Feld verbunden sind
-		/// </summary>
-		/// <param name="ID">Das zu untersuchende Feld</param>
-		public static IEnumerable<int> GetConnected(int ID)
-		{
-			return Enumerable.Range(0, FIELD_SIZE).Where(id => connections[ID, id]);
-		}
-
 		public GameState()
 		{
 			// Leeres Feld
@@ -106,6 +99,29 @@ namespace Morris
 				[Player.Black] = 0,
 				[Player.White] = 0
 			};
+
+			MovesSinceLastStoneCountChange = 0;
+		}
+
+		public GameState(IReadOnlyGameState other)
+		{
+			Board = other.Board.ToArray();
+			NextToMove = other.NextToMove;
+			Result = other.Result;
+			MovesSinceLastStoneCountChange = other.MovesSinceLastStoneCountChange;
+			Player[] players = new[] { Player.Black, Player.White };
+			playerPhase = players.ToDictionary(p => p, p => other.GetPhase(p));
+			stonesPlaced = players.ToDictionary(p => p, p => other.GetStonesPlaced(p));
+			currentStones = players.ToDictionary(p => p, p => other.GetCurrentStones(p));
+			history = other.History.Select(elem => elem.ToArray()).ToList();
+		}
+
+		public IEnumerable<ReadOnlyCollection<Occupation>> History
+		{
+			get
+			{
+				return history.Select(elem => Array.AsReadOnly(elem));
+			}
 		}
 
 		ReadOnlyCollection<Occupation> IReadOnlyGameState.Board
@@ -114,6 +130,15 @@ namespace Morris
 			{
 				return Array.AsReadOnly(Board);
 			}
+		}
+
+		/// <summary>
+		/// Gibt alle Felder zurück, die mit einem Feld verbunden sind
+		/// </summary>
+		/// <param name="ID">Das zu untersuchende Feld</param>
+		public static IEnumerable<int> GetConnected(int ID)
+		{
+			return Enumerable.Range(0, FIELD_SIZE).Where(id => connections[ID, id]);
 		}
 
 		// Die folgenden drei Methoden existieren, weil selbst eine Setter-Only Property,
@@ -237,7 +262,7 @@ namespace Morris
 				if (move.From < 0 || move.From >= FIELD_SIZE)
 					return MoveValidity.Invalid; // OOB
 
-				if ((int)Board[move.From.Value] != (int)NextToMove) // In der Enum-Definition von Occupation gleichgesetzt
+				if (!Board[move.From.Value].IsOccupiedBy(NextToMove))
 					return MoveValidity.Invalid; // Kein Stein zum Bewegen
 
 				if (playerPhase[NextToMove] == Phase.Moving && !connections[move.From.Value, move.To])
@@ -251,7 +276,7 @@ namespace Morris
 				mill.Contains(move.To) && // den neu gesetzten Stein enthält und
 				mill.All(point =>  // bei der alle Punkte
 					(!move.From.HasValue || point != move.From) && // nicht der Ursprungspunkt der aktuellen Steinbewegung sind und
-					(int)Board[point] == (int)NextToMove || point == move.To)); // entweder schon vom Spieler bestzt sind oder Ziel der aktuellen Steinbewegung sind.
+					Board[point].IsOccupiedBy(NextToMove) || point == move.To)); // entweder schon vom Spieler bestzt sind oder Ziel der aktuellen Steinbewegung sind.
 
 			// 4.: Verifikation des Mühlenparameters
 			if (millClosed)
@@ -262,7 +287,7 @@ namespace Morris
 				if (move.Remove < 0 || move.Remove >= FIELD_SIZE)
 					return MoveValidity.Invalid; // OOB
 
-				if ((int)Board[move.Remove.Value] != (int)NextToMove.Opponent())
+				if (!Board[move.Remove.Value].IsOccupiedBy(NextToMove.Opponent()))
 					return MoveValidity.Invalid; // Auf dem Feld liegt kein gegnerischer Stein
 
 				// Es darf kein Stein aus einer geschlossenen Mühle entnommen werden, falls es Steine gibt, die in keiner
@@ -271,10 +296,10 @@ namespace Morris
 				// "Für alle gegnerischen Steine gilt, dass eine Mühle existiert, die diesen Stein enthält und von der alle
 				// Felder durch gegnerische Steine besetzt sind (die Mühle also geschlossen ist)"
 				bool allInMill = Enumerable.Range(0, FIELD_SIZE)
-					.Where(point => (int)Board[point] == (int)NextToMove.Opponent())
-					.All(point => Mills.Any(mill => mill.Contains(point) && mill.All(mp => (int)Board[point] == (int)NextToMove.Opponent())));
+					.Where(point => Board[point].IsOccupiedBy(NextToMove.Opponent()))
+					.All(point => Mills.Any(mill => mill.Contains(point) && mill.All(mp => Board[mp].IsOccupiedBy(NextToMove.Opponent()))));
 
-				if (!allInMill && Mills.Any(mill => mill.Contains(move.Remove.Value) && mill.All(point => (int)Board[point] == (int)NextToMove.Opponent())))
+				if (!allInMill && Mills.Any(mill => mill.Contains(move.Remove.Value) && mill.All(point => Board[point].IsOccupiedBy(NextToMove.Opponent()))))
 					return MoveValidity.Invalid; // Versuch, einen Stein aus einer Mühle zu entfernen, obwohl Steine frei sind
 			}
 			else if (move.Remove.HasValue)
@@ -326,10 +351,14 @@ namespace Morris
 					playerPhase[NextToMove.Opponent()] = Phase.Flying;
 			}
 
+			// Zu lange keine 
+			MovesSinceLastStoneCountChange = move.From.HasValue && !move.Remove.HasValue ? MovesSinceLastStoneCountChange + 1 : 0;
+			if (MovesSinceLastStoneCountChange == UNCHANGED_MOVES_MAX)
+				Result = GameResult.Draw;
+
 			// Wiederholte Stellung
 			if (!playerPhase.Values.All(phase => phase == Phase.Placing) && history.Any(pastBoard => Board.SequenceEqual(pastBoard)))
 				Result = GameResult.Draw;
-
 
 			// Gegner hat nur noch zwei Steine
 			if (playerPhase[NextToMove.Opponent()] != Phase.Placing && currentStones[NextToMove.Opponent()] == 2)
