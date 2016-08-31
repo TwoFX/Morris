@@ -327,7 +327,7 @@ Schließen Sie den Dialog dann mit `OK`.
 Das absolute Minimalbeispiel, für eine KI, die Sie jetzt erstellen können,
 sieht folgendermaßen aus:
 
-```
+```csharp
 using System.Linq;
 using Morris;
 
@@ -358,7 +358,7 @@ nutzen, um ihr Verhalten bezüglich Morris zu modifizieren.
 
 Wird die Klasse folgendermaßen deklariert:
 
-```
+```csharp
 [SelectorName("Meine KI")]
 public class MeineKI : IMoveProvider
 ```
@@ -366,11 +366,11 @@ public class MeineKI : IMoveProvider
 Dann erscheint im Auswahldialog des Kontrollers für die KI nicht der Klassenname
 `MeineMorrisKI.MeineKI`, sondern der etwas freundlichere Name `Meine KI`.
 
-### `SingleInstanceAttribute`
+#### `SingleInstanceAttribute`
 
 Wird die Klasse folgendermaßen deklariert:
 
-```
+```csharp
 [SingleInstance]
 public class MeineKI : IMoveProvider
 ```
