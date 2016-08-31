@@ -247,9 +247,9 @@ befinden, in den Ordner `Malom2Morris-1.0\working`.
 
 Die Software ist in C# 6 verfasst. Ob der längeren Liste der erlaubten Sprachen
 gehe ich davon aus, dass nicht jeder Leser dieses Quellcodes zu einhundert Prozent
-mit dieser Sprache vertraut ist. Da der Code davon extrem starken Gebrauch macht,
-empfehle ich dem geneigten Lesen, sich vor der Lektüre des Codes, falls notwendig,
-mit Lamda-Ausdrücken und LINQ (wieder) vertraut zu machen.
+mit dieser Sprache vertraut ist. Da der Code von diesen beiden Features extrem starken Gebrauch macht,
+empfehle ich dem geneigten Leser, sich vor der Lektüre des Codes, falls notwendig,
+mit Lambda-Ausdrücken und LINQ (wieder) vertraut zu machen.
 
 ### Grobüberblick über die Architektur
 
@@ -284,6 +284,107 @@ dem richtigen Thread verfügbar war. Diese Änderungen sind nicht sonderlich int
 falls aber auch irgendeinem Grund dennoch Interesse daran besteht, können die Änderungen
 [hier](https://github.com/TwoFX/Malom2Morris/compare/04922f...v1.0) eingesehen werden
 (dafür ist das Projekt ja Open Source).
+
+## Selbst Erweiterungen entwickeln
+
+Um selbst Anzeigen oder KIs für Morris zu entwickeln, benötigen Sie Visual Studio 2015.
+Die kostenlose Community Edition kann [hier](https://beta.visualstudio.com/vs/community/)
+heruntergeladen werden.
+
+### Basics
+
+Erweiterungen für Morris sind .NET 4.5.2- bzw. C++/CLI-Klassenbibliotheken mit Zielplattform
+x64 und einer Referenz auf Morris. Um ein neues Projekt einzurichten, das diese
+Kriterien erfüllt, folgen Sie der folgenden Anleitung:
+
+1. Erstellen Sie ein neues Visual Studio-Projekt vom Typ Visual C# Class Library.
+Stellen Sie sicher, dass im Dropdown oben `.NET Framework 4.5.2` ausgewählt ist.
+
+  ![Projekt erstellen](Documentation/CreateOne.PNG)
+
+2. Doppelklicken Sie auf den Eintrag `Properties` im Solution Explorer.
+
+  ![Properties](Documentation/CreateTwo.PNG)
+
+3. Wählen Sie im sich öffnenden Dialog im Reiter `Build` das `Platform target` `x64`.
+
+  ![Target](Documentation/CreateThree.PNG)
+
+4. Wiederholen Sie Schritt drei, nachdem Sie bei `Configuration` `Release` ausgewählt haben.
+
+5. Rechtsklicken Sie im Solution Explorer auf den Eintrag `References` und wählen Sie `Add Reference...`
+
+  ![Reference](Documentation/CreateFive.PNG)
+
+6. Klicken Sie in dem Dialog unten auf Browse, navigieren Sie zu Morris.exe, die
+Sie entweder heruntergeladen oder kompiliert haben und bestätigen Sie die Auswahl.
+Schließen Sie den Dialog dann mit `OK`.
+
+  ![Confirm](/Documentation/StepTen.PNG)
+
+7. Fertig. Das Projekt ist nun bereit.
+
+Das absolute Minimalbeispiel, für eine KI, die Sie jetzt erstellen können,
+sieht folgendermaßen aus:
+
+```
+using System.Linq;
+using Morris;
+
+namespace MeineMorrisKI
+{
+    public class MeineKI : IMoveProvider
+    {
+		public GameMove GetNextMove(IReadOnlyGameState state)
+		{
+			return state.BasicMoves().First();
+		}
+    }
+}
+```
+
+Anzumerken ist, dass diese KI nicht zwangsläufig einen gültigen Zug produziert.
+
+Wenn Sie dieses Projekt nun mit der Taste F6 kompilieren, befindet sich im Ordner
+`bin/Debug` bzw. `bin/Release` des Projektordners dann eine `.dll`-Datei, die von
+Morris mit Hilfe des `Assembly laden...`-Knopfes eingelesen werden kann.
+
+### Attribute
+
+Zusätzlich zum reinen Implementieren des Interfaces kann eine Klasse noch zwei Attribute
+nutzen, um ihr Verhalten bezüglich Morris zu modifizieren.
+
+#### `SelectorNameAttribute`
+
+Wird die Klasse folgendermaßen deklariert:
+
+```
+[SelectorName("Meine KI")]
+public class MeineKI : IMoveProvider
+```
+
+Dann erscheint im Auswahldialog des Kontrollers für die KI nicht der Klassenname
+`MeineMorrisKI.MeineKI`, sondern der etwas freundlichere Name `Meine KI`.
+
+### `SingleInstanceAttribute`
+
+Wird die Klasse folgendermaßen deklariert:
+
+```
+[SingleInstance]
+public class MeineKI : IMoveProvider
+```
+
+Dann wird die Klasse MeineKI, auch wenn sie beide Spieler steuern soll, nur einmal
+instanziiert. Dies ist beispielsweise dann von Bedeutung, wenn eine Klasse gleichzeitig
+`IMoveProvider` und `IGameStateObserver` implementiert, wie zum Beispiele eine GUI.
+damit nicht ein Fenster für jeden Spieler und ein Fenster für die Anzeige verwendet
+wird, wird das `SingleInstanceAttribute` gesetzt.
+
+---
+
+Wenn Sie es geschafft haben, die ReadMe bis hierher zu lesen, bleibt mir nur noch,
+Ihnen viel Spaß beim Spielen zu wünschen.
 
 ## Literatur
 
