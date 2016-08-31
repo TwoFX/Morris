@@ -47,6 +47,7 @@ namespace Morris
 					.Where(point => state.Board[point].IsOccupiedBy(state.NextToMove.Opponent()))
 					.All(point => GameState.Mills.Any(mill => mill.Contains(point) && mill.All(mp => state.Board[mp].IsOccupiedBy(state.NextToMove.Opponent()))));
 
+				// filter enthält, falls wir nicht alle gegnerische Steine schlagen dürfen, eine engere Auswahl, die für die Steine, die wir schlagen dürfen, wahr zurückgibt
 				Func<int, bool> filter;
 				if (allInMill)
 					filter = _ => true;
@@ -54,6 +55,7 @@ namespace Morris
 					// Wenn es Steine gibt, die in keiner Mühle sind, müssen wir einen solchen Stein entfernen
 					filter = point => GameState.Mills.All(mill => !mill.Contains(point) || mill.Any(mp => !state.Board[mp].IsOccupiedBy(state.NextToMove.Opponent())));
 
+				// Erweitere unseren Zug mit dem Befehl einen zufälligen Stein zu entfernen, der dem Gegner gehört, dem Filter entspricht und gemäß der Methode scoreRemove maximal ist
 				return move.WithRemove(
 					Enumerable.Range(0, GameState.FIELD_SIZE)
 					.Where(point => state.Board[point].IsOccupiedBy(state.NextToMove.Opponent()) && filter(point))

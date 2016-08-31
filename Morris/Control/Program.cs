@@ -9,6 +9,9 @@ using System.Windows;
 
 namespace Morris
 {
+	/// <summary>
+	/// Enthält den Haupteinsprungspunkt für unser Programm
+	/// </summary>
 	internal class Program
 	{
 		[STAThread]

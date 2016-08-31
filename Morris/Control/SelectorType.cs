@@ -11,6 +11,9 @@ namespace Morris
 {
 	/// <summary>
 	/// Hält einen Typen fest, der potentiell durch ein <see cref="SelectorNameAttribute"/> einen neuen Namen erhalten hat 
+	/// Objekte dieses Typs können dann in eine ListBox oder ComboBox eingefügt werden. Diese rufen .ToString() auf, und
+	/// zeigen so den gewünschten Namen an. Wir erhalten dieses Objekt dann zurück von ListBox/ComboBox durch SelectedItem
+	/// und können dann über die Type-Eigenschaft erfahren, welche KI oder Anzeige wir instanziieren sollen.
 	/// </summary>
 	internal class SelectorType
 	{

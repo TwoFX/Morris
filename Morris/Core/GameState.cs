@@ -75,6 +75,9 @@ namespace Morris
 			}
 		}
 
+		/// <summary>
+		/// Erstellt einen Spielzustand zu Beginn eines Mühlespiels
+		/// </summary>
 		public GameState()
 		{
 			// Leeres Feld
@@ -103,6 +106,9 @@ namespace Morris
 			MovesSinceLastStoneCountChange = 0;
 		}
 
+		/// <summary>
+		/// Erstellt eine modifizierbare Arbeitskopie eines Spielzustands
+		/// </summary>
 		public GameState(IReadOnlyGameState other)
 		{
 			Board = other.Board.ToArray();
@@ -116,6 +122,9 @@ namespace Morris
 			history = other.History.Select(elem => elem.ToArray()).ToList();
 		}
 
+		/// <summary>
+		/// Alle Vergangenen Zustände des Spielfelds
+		/// </summary>
 		public IEnumerable<ReadOnlyCollection<Occupation>> History
 		{
 			get
@@ -124,6 +133,9 @@ namespace Morris
 			}
 		}
 
+		/// <summary>
+		/// Belegungsinformationen zum Spielfeld
+		/// </summary>
 		ReadOnlyCollection<Occupation> IReadOnlyGameState.Board
 		{
 			get

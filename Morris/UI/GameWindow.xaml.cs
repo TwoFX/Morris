@@ -239,7 +239,7 @@ namespace Morris
 		private void ellipseMouseDown(object sender, MouseEventArgs e)
 		{
 			Ellipse ellipse = sender as Ellipse;
-			int index = Array.IndexOf(pieces, ellipse);
+			int index = Array.IndexOf(pieces, ellipse); // Welches Feld wurde angegklickt?
 
 			if (index == -1)
 				return;
@@ -247,6 +247,7 @@ namespace Morris
 			switch (mode)
 			{
 				case Mode.ExpectingClick:
+					//  Wir wollten einen Klick haben
 					if (!validSources[index])
 						break;
 
@@ -255,13 +256,14 @@ namespace Morris
 					break;
 
 				case Mode.ExpectingDrag:
+					// Dieser Klick repräsentiert den Anfang eines "Ziehprozesses"
 					if (!validSources[index])
 						break;
 
-					source = index;
-					mode = Mode.Dragging;
-					offset = e.GetPosition(ellipse);
-					Mouse.Capture(ellipse);
+					source = index; // Wo Drag&Drop begonnen hat
+					mode = Mode.Dragging; // Wir sind jetzt am ziehen
+					offset = e.GetPosition(ellipse); // Wo befindet sich der Mausweiger im Spielstein?
+					Mouse.Capture(ellipse); // Alle Mausevents werden jetzt an diesen Spielstein gesendet
 					break;
 			}
 		}
@@ -302,7 +304,7 @@ namespace Morris
 				error = true;
 			}
 
-			// Maus freigeben
+			// Maus freigeben (Mausevents werden jetzt wieder an das Element gesendet, das sich unter dem Mauszeiger befindet)
 			Mouse.Capture(null);
 			sync.Set(); // Zurück zum Spielthread
 		}

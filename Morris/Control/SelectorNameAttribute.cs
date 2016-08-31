@@ -9,7 +9,9 @@ using System;
 namespace Morris
 {
 	/// <summary>
-	/// Ein Attribut, welches angibt, wie die Klasse im Auswahldialog benannt werden soll
+	/// Ein Attribut, welches angibt, wie die Klasse im Auswahldialog benannt werden soll.
+	/// Man kann Anzeigen und KIs damit dekorieren, damit nicht der Klassenname (z.B. Morris.AI.NegamaxAI)
+	/// im Selektor steht, sondern etwas lesefreundlicheres wie Einfacher Negamax
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, Inherited = true)]
 	public sealed class SelectorNameAttribute : Attribute

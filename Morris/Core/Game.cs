@@ -70,12 +70,14 @@ namespace Morris
 			}
 		}
 
+		// Verzögerung, damit man einen Zug betrachten kann
 		public int Delay
 		{
 			get;
 			set;
 		}
 
+		// Wird gesperrt, wenn moves bzw. movesReadOnly verändert wird
 		private static object movesLock = new object();
 
 		public Game(IMoveProvider white, IMoveProvider black, int delay)
