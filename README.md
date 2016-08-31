@@ -27,8 +27,8 @@ erweitern). Mehr dazu weiter unten.
 2. Überblick über die Architektur der Software und den Quellcode
   1. Hinweise zum Lesen des Quellcodes
   2. Grobüberblick über die Architektur
-  3. Verzeichnis nicht automatisch generierter Quellcodedateien
-3. Selbst Erweiterungen Entwickeln
+  3. Zum Quellcode von Malom2Morris
+3. Selbst Erweiterungen entwickeln
   1. Basics
   2. Attribute
 
@@ -154,11 +154,10 @@ praktisch alle Mühlespielsituationen befinden. Da diese Datenbank
 Online nicht verfügbar ist, muss sie auf dem eigenen Rechner berechnet werden.
 Dies benötigt mindestens 16GB Arbeitsspeicher, logischerweise 78GB freien Festplattenspeicher
 und ca. 24 Stunden Rechenzeit. Sehr geehrte Mitarbeiter von IT-Talents und der Gauselmann-AG,
-ich kann verstehen, wenn Ihnen das für eine Einsendung zu viel Aufwand ist. Für
-diesen Fall finden sie [hier]() ein Video, wie es aussieht, gegen diese Spieler zu
-spielen. Ich kann aber auch wärmstens empfehlen, sich die Mühe zu machen und selbst
+ich kann verstehen, wenn Ihnen das für eine Einsendung zu viel Aufwand ist.
+Ich kann aber auch wärmstens empfehlen, sich die Mühe zu machen und selbst
 gegen diese KI zu spielen, da der vorausschauende Spielstil des perfekten Spielers
-sehr faszinierend ist und gleichzeitig beeindruckend, wie man vollständig in
+sehr faszinierend ist und es gleichzeitig beeindruckend ist, wie man vollständig in
 Grund und Boden gespielt wird.
 
 Um Malom3/Malom2Morris zu kompilieren wird Visual Studio 2015 benötigt. Die
