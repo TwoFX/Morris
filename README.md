@@ -217,7 +217,7 @@ Schließen Sie den Dialog dann mit `OK`.
 
 13. Klicken Sie in der Toolbar nun auf `Start`.
 
-  ![Start](/Documentation/StepThirteea.PNG)
+  ![Start](/Documentation/StepThirteen.PNG)
 
 14. Das Fenster zur Berechnung der Datenbank öffnet sich. Setzen Sie einen Haken bei `Automatic`.
 
@@ -226,7 +226,7 @@ Schließen Sie den Dialog dann mit `OK`.
 15. Warten Sie ca. 24 Stunden, bis beide Fortschrittsbalken dreimal durchgelaufen sind.
 Sobald die Berechnung abgeschlossen ist, öffnet sich ein Dialog mit dem Inhalt `Everything Done`.
 
-  ![Fertig](/Documentation/StepFifteen.PNG)
+  ![Fertig](/Documentation/StepFifteen.png)
 
 16. Kopieren Sie nun die 9 Dateien, die sich im Ordner `Malom2Morris-1.0\Malom_megoldas\Malom2Morris\bin\Release`,
 befinden, in den Ordner `Malom2Morris-1.0\working`.
