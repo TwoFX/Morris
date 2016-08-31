@@ -239,7 +239,7 @@ befinden, in den Ordner `Malom2Morris-1.0\working`.
 
 18. Fertig! Sie können nun gegen den perfekten Spieler verlieren.
 
-![Verloren](/master/Documentation/StepEighteen.PNG)
+![Verloren](/Documentation/StepEighteen.PNG)
 
 ## Überblick über die Architektur der Software und den Quellcode
 
