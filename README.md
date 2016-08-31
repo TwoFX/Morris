@@ -171,7 +171,7 @@ als Zip-Datei heruntergeladen werden. Die Zip-Datei sollte dann entpackt werden.
 mit Visual Studio geöffnet werden.
 3. Wählen Sie in den drei Dropdowns in der Toolbar die Einträge `Release`, `Any CPU` und `Controller`.
 
-![Auswahl in der Toolbar](/Documentation/StepThree.PNG)
+  ![Auswahl in der Toolbar](/Documentation/StepThree.PNG)
 
 4. Klicken Sie rechts im Solution Explorer mit der rechten Maustaste auf `Controller`
 und wählen Sie `Properties`.
