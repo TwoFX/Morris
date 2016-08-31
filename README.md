@@ -176,70 +176,70 @@ mit Visual Studio geöffnet werden.
 4. Klicken Sie rechts im Solution Explorer mit der rechten Maustaste auf `Controller`
 und wählen Sie `Properties`.
 
-![Properties](/Documentation/StepFour.png)
+  ![Properties](/Documentation/StepFour.png)
 
 5. Wählen Sie in dem sich öffnenden Dialog den Reiter `Debug` und fügen Sie bei `Working directory`
 den Pfad zu dem Ordner `working` ein, der mit der Zip-Datei entpackt wurde.
 
-![Working directory](/Documentation/StepFive.PNG)
+  ![Working directory](/Documentation/StepFive.PNG)
 
 6. Öffnen Sie durch den Solution Explorer die Datei `common.h` wie abgebildet.
 
-![common.h](/Documentation/StepSix.PNG)
+  ![common.h](/Documentation/StepSix.PNG)
 
 7. Navigieren Sie in der Datei zu Zeile 145. Ersetzen Sie den Dateipfad dort zu
 dem Ordner `dataaux`, den Sie mit der Zip-Datei entpackt haben.
 
-![Pfad ersetzen](/Documentation/StepSeven.PNG)
+  ![Pfad ersetzen](/Documentation/StepSeven.PNG)
 
 8. Machen Sie den Eintrag `Morris` an der abgebildeten Stelle im Solution Explorer
 ausfindig. Entfernen Sie ihn mit der Entfernen-Taste.
 
-![Referenz](/Documentation/StepEight.PNG)
+  ![Referenz](/Documentation/StepEight.PNG)
 
 9. Rechtsklicken Sie auf den Eintrag `References` und wählen Sie `Add Reference...`
 
-![Add](/Documentation/StepNine.PNG)
+  ![Add](/Documentation/StepNine.PNG)
 
 10. Klicken Sie in dem Dialog unten auf Browse, navigieren Sie zu Morris.exe, die
 Sie entweder heruntergeladen oder kompiliert haben und bestätigen Sie die Auswahl.
 Schließen Sie den Dialog dann mit `OK`.
 
-![Confirm](/Documentation/StepTen.PNG)
+  ![Confirm](/Documentation/StepTen.PNG)
 
 11. Wählen Sie im Menü `Build` nun `Build Solution`.
 
-![Build](/Documentation/StepEleven.PNG)
+  ![Build](/Documentation/StepEleven.PNG)
 
 12. Warten Sie ca. 30 Sekunden, bis am unteren Rand des Fensters `Rebuild All succeeded` erscheint.
 
-![Rebuild All succeeded](/Documentation/StepTwelve.PNG)
+  ![Rebuild All succeeded](/Documentation/StepTwelve.PNG)
 
 13. Klicken Sie in der Toolbar nun auf `Start`.
 
-![Start](/Documentation/StepThirteea.PNG)
+  ![Start](/Documentation/StepThirteea.PNG)
 
 14. Das Fenster zur Berechnung der Datenbank öffnet sich. Setzen Sie einen Haken bei `Automatic`.
 
-![Auto](/Documentation/StepFourteen.PNG)
+  ![Auto](/Documentation/StepFourteen.PNG)
 
 15. Warten Sie ca. 24 Stunden, bis beide Fortschrittsbalken dreimal durchgelaufen sind.
 Sobald die Berechnung abgeschlossen ist, öffnet sich ein Dialog mit dem Inhalt `Everything Done`.
 
-![Fertig](/Documentation/StepFifteen.PNG)
+  ![Fertig](/Documentation/StepFifteen.PNG)
 
 16. Kopieren Sie nun die 9 Dateien, die sich im Ordner `Malom2Morris-1.0\Malom_megoldas\Malom2Morris\bin\Release`,
 befinden, in den Ordner `Malom2Morris-1.0\working`.
 
-![Kopiert](/Documentation/StepSixteen.PNG)
+  ![Kopiert](/Documentation/StepSixteen.PNG)
 
 17. Öffnen Sie nun `Morris.exe` und importieren Sie durch Klick auf `Assembly laden...` `Malom2Morris.dll`.
 
-![Laden](/Documentation/StepSeventeen.PNG)
+  ![Laden](/Documentation/StepSeventeen.PNG)
 
 18. Fertig! Sie können nun gegen den perfekten Spieler verlieren.
 
-![Verloren](/Documentation/StepEighteen.PNG)
+  ![Verloren](/Documentation/StepEighteen.PNG)
 
 ## Überblick über die Architektur der Software und den Quellcode
 
